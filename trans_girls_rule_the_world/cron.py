@@ -11,8 +11,19 @@ def trans_girls_cron():
     """
     cron = plan.Plan('trans_girls_rule_the_world')
     path = trans_girls_rule_the_world.__path__[0]
+    environment = {
+        'TRANS_GIRLS_CONSUMER_KEY': os.environ['TRANS_GIRLS_CONSUMER_KEY'],
+        'TRANS_GIRLS_CONSUMER_SECRET': os.environ['TRANS_GIRLS_CONSUMER_SECRET'],
+        'TRANS_GIRLS_OAUTH_TOKEN': os.environ['TRANS_GIRLS_OAUTH_TOKEN'],
+        'TRANS_GIRLS_OAUTH_SECRET': os.environ['TRANS_GIRLS_OAUTH_SECRET']
+    }
 
-    cron.script('rule.py', every='5.minutes', path=path)
+    cron.script(
+        'rule.py', 
+        every='5.minutes', 
+        path=path,
+        environment=environment
+    )
 
     #update cron if crontab exists, write new cron if crontab doesn't exist
     try:
