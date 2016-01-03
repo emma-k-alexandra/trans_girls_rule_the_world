@@ -127,8 +127,8 @@ class TransGirls(object):
 
         #generate some emoji tags
         post_args['tags'] = [
-            self.generate_emoji_string(settings.EMOJI_STRING_LENGTH),
-            self.generate_emoji_string(settings.EMOJI_STRING_LENGTH)
+            self.generate_emoji_string(5),
+            self.generate_emoji_string(5)
         ]
 
         #reblog
