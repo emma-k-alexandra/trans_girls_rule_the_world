@@ -70,7 +70,7 @@ BLACKLIST = set([
     "boy"
 ])
 
-EMOJI_STRING_LENGTH = 5,
+EMOJI_STRING_LENGTH = 5
 SAFE_EMOJIS = [
     ':innocent:',
     ':grinning:',
