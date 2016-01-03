@@ -60,6 +60,7 @@ BLACKLIST = set([
     "trans headcanon",
     "fanart",
     "trans hc",
+    "gender hc",
     "hot transgender",
     "oc",
     "ocs",
