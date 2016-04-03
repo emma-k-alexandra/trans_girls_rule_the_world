@@ -68,7 +68,8 @@ BLACKLIST = set([
     "trans guy"
     "truscum",
     "man",
-    "boy"
+    "boy",
+    "shirtless"
 ])
 
 SAFE_EMOJIS = [
