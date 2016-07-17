@@ -16,6 +16,16 @@ TAGS = [
     'girlslikeus'
 ]
 
+WHITELIST = set([
+    'netflixdesign',
+    'always-sunny-in-lilydelphia',
+    'daily-transitions',
+    'terrificallytranstrid',
+    'mytitslookgood',
+    'naidje',
+    'blissfulsomeone'
+])
+
 BLACKLIST = set([
     "tranny",
     "ladyboy",
@@ -32,9 +42,7 @@ BLACKLIST = set([
     "t-girl",
     "dont reblog",
     "don't reblog",
-    "dont",
     "no reblogs",
-    "no"
     "no reblog",
     "don't reblog plz",
     "dont reblog plz",
@@ -54,7 +62,6 @@ BLACKLIST = set([
     "self-harm",
     "bloodplay",
     "cuts",
-    "ed",
     "headcanon",
     "headcanons",
     "trans headcanon",
@@ -62,14 +69,13 @@ BLACKLIST = set([
     "trans hc",
     "gender hc",
     "hot transgender",
-    "oc",
-    "ocs",
     "trans boy",
     "trans guy"
     "truscum",
     "man",
     "boy",
-    "shirtless"
+    "shirtless",
+    "comic"
 ])
 
 SAFE_EMOJIS = [
