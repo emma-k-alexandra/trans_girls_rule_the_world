@@ -13,7 +13,7 @@ setuptools.setup(
     install_requires=[
         'pymongo<3.4',
         'pytumblr>0.0.6,<0.1.0',
-        'emoji>0.3<1.0',
+        'emoji>0.3,<1.0',
         'plan>0.5,<1.0'
     ],
     package_dir={
