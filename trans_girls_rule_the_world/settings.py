@@ -23,7 +23,8 @@ WHITELIST = set([
     'terrificallytranstrid',
     'mytitslookgood',
     'naidje',
-    'blissfulsomeone'
+    'blissfulsomeone',
+    'elegant-witch-bitch'
 ])
 
 BLACKLIST = set([
