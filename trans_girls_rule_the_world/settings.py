@@ -12,6 +12,7 @@ TUMBLR = [
 
 TAGS = [
     'trans girl',
+    'trans woman',
     'twoc',
     'girlslikeus'
 ]
