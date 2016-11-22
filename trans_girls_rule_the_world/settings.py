@@ -12,20 +12,10 @@ TUMBLR = [
 
 TAGS = [
     'trans girl',
+    'trans woman',
     'twoc',
     'girlslikeus'
 ]
-
-WHITELIST = set([
-    'netflixdesign',
-    'always-sunny-in-lilydelphia',
-    'daily-transitions',
-    'terrificallytranstrid',
-    'mytitslookgood',
-    'naidje',
-    'blissfulsomeone',
-    'elegant-witch-bitch'
-])
 
 BLACKLIST = set([
     "tranny",
@@ -38,6 +28,8 @@ BLACKLIST = set([
     "genderbender",
     "genderswap",
     "sissy",
+    "sissifaction",
+    "siss",
     "shemale",
     "transvesti",
     "transvestite",
@@ -65,6 +57,7 @@ BLACKLIST = set([
     "do not reblog pls",
     "do not reblog plz",
     "nsfw",
+    "cocksucking",
     "nudity",
     "nude",
     "lewd",
@@ -94,7 +87,10 @@ BLACKLIST = set([
     "shirtless",
     "topless",
     "comic",
-    "webcomic"
+    "webcomic",
+    "fembot",
+    "play thing",
+    "mindless"
 ])
 
 SAFE_EMOJIS = [

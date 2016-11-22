@@ -109,11 +109,6 @@ class TransGirls(object):
 
         case_insenstive_tags = set([tag.lower() for tag in post['tags']])
 
-        # If the poster is on an approved list, reblog (as long as it's not tagged don't reblog)
-        if post['blog_name'] in settings.WHITELIST and \
-            not len(case_insenstive_tags & set(["don't reblog", 'dont reblog'])):
-            return True
-
         # if posts contains any tags in the blacklist, ignore it
         if len(case_insenstive_tags & settings.BLACKLIST):
             return False
@@ -170,6 +165,7 @@ def main():
     Attempts to post to blog
     """
     TransGirls().attempt_post()
+
 
 if __name__ == '__main__':
     main()
