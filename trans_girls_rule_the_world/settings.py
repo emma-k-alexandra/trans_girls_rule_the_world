@@ -33,9 +33,12 @@ BLACKLIST = set([
     "shemale",
     "transvesti",
     "transvestite",
+    "transexuals",
     "crossdresser",
     "t-girl",
     "dickgirl",
+    "ladyboy",
+    "ladyboys",
     "futa",
     "futanari",
     "shim",
@@ -90,7 +93,9 @@ BLACKLIST = set([
     "webcomic",
     "fembot",
     "play thing",
-    "mindless"
+    "mindless",
+    "masturbate",
+    "masturbating"
 ])
 
 SAFE_EMOJIS = [

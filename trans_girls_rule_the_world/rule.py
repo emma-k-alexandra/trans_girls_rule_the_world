@@ -37,11 +37,11 @@ class TransGirls(object):
         """
         Generates a string of safe emojis of the given length
 
-        :param length:
-            length of emoji string
+        Args:
+            length (int): desired length of emoji string
 
-        :returns:
-            str - safe emoji string of given length
+        Returns:
+            str: emoji string of given length
         """
         emoji_string = ''
 
@@ -55,11 +55,11 @@ class TransGirls(object):
         """
         Checks if a post is in the database
 
-        :param post_id:
-            tumblr id for a post
+        Args:
+            post_id (int): id of a tumblr post
 
-        :returns:
-            boolean - if the post is in the database
+        Returns:
+            bool: If the given post in the database
         """
         return bool(self.__mongo.tumblr.trans_girl.find_one({'_id': post_id}))
 
@@ -68,8 +68,8 @@ class TransGirls(object):
         """
         Saves a post id to the database
 
-        :param post_id:
-            tumblr id for a post
+        Args:
+            post_id (int): id of a tumblr post
         """
         self.__mongo.tumblr.trans_girl.insert({'_id': post_id})
 
@@ -77,6 +77,9 @@ class TransGirls(object):
     def fetch_posts(self):
         """
         Gets posts from tumblr
+
+        Returns:
+            list: post dicts from tumblr api
         """
         posts = []
 
@@ -90,14 +93,13 @@ class TransGirls(object):
 
 
     def should_reblog_post(self, post):
-        """
-        Determines if a post should be reblogged
+        """Determines if a post should be reblogged
 
-        :param post:
-            dict of a tumblr post
+        Args:
+            post (dict): post from tumblr api
 
-        :returns:
-            bool - if the post should be reblogged
+        Returns:
+            bool: if the given post should be reblogged
         """
         # if posts is not a photo, give up
         if post['type'] != 'photo':
@@ -113,16 +115,23 @@ class TransGirls(object):
         if len(case_insenstive_tags & settings.BLACKLIST):
             return False
 
+        # if username contains any text in the blacklist, ignore it
+        if post['blog_name'] in settings.BLACKLIST:
+            return False
+
+        # if text of post contains any text in the blacklist, ignore it
+        if len(set(post['summary'].lower().split()) & settings.BLACKLIST):
+            return False
+
         # if we meet our critia to reblog, we should reblog!
         return True
 
 
     def reblog_post(self, post):
-        """
-        Reblogs a post
+        """Reblogs a post
 
-        :param post:
-            dict of a tumblr post
+        Args:
+            post (dict): post from tumblr api
         """
         # we want to reblog this post, start building our reblog arguments
         post_args = {
@@ -148,7 +157,7 @@ class TransGirls(object):
 
     def attempt_post(self):
         """
-        Fetches posts from tumblr, determines if they're worthy
+        Fetches posts from tumblr, determines if they're worthy, posts 'em
         """
         # interate over potential posts
         for post in self.fetch_posts():

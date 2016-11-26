@@ -19,8 +19,8 @@ def trans_girls_cron():
     }
 
     cron.script(
-        'rule.py', 
-        every='5.minutes', 
+        'rule.py',
+        every='5.minutes',
         path=path,
         environment=environment
     )
