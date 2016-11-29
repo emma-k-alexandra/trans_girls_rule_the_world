@@ -12,13 +12,10 @@ import pytumblr
 from trans_girls_rule_the_world import settings
 
 class TransGirls(object):
-    """
-    Tumblr bot to reblog selfies
-    """
+    """Tumblr bot to reblog selfies"""
+
     def __init__(self):
-        """
-        Initialize tumblr and mongo client
-        """
+        """Initialize tumblr and mongo client"""
         self.__mongo = pymongo.MongoClient()
         self.__tumblr = pytumblr.TumblrRestClient(*settings.TUMBLR)
         self.__emojis = settings.SAFE_EMOJIS
@@ -34,8 +31,7 @@ class TransGirls(object):
 
 
     def generate_emoji_string(self, length):
-        """
-        Generates a string of safe emojis of the given length
+        """Generates a string of safe emojis of the given length
 
         Args:
             length (int): desired length of emoji string
@@ -52,8 +48,7 @@ class TransGirls(object):
 
 
     def __in_database(self, post_id):
-        """
-        Checks if a post is in the database
+        """Checks if a post is in the database
 
         Args:
             post_id (int): id of a tumblr post
@@ -65,8 +60,7 @@ class TransGirls(object):
 
 
     def __save_post(self, post_id):
-        """
-        Saves a post id to the database
+        """Saves a post id to the database
 
         Args:
             post_id (int): id of a tumblr post
@@ -75,8 +69,7 @@ class TransGirls(object):
 
 
     def fetch_posts(self):
-        """
-        Gets posts from tumblr
+        """Gets posts from tumblr
 
         Returns:
             list: post dicts from tumblr api
@@ -115,9 +108,11 @@ class TransGirls(object):
         if len(case_insenstive_tags & settings.BLACKLIST):
             return False
 
-        # if username contains any text in the blacklist, ignore it
-        if post['blog_name'] in settings.BLACKLIST:
-            return False
+        for blocked_word in settings.BLACKLIST:
+            
+            # if username contains any text in the blacklist, ignore it
+            if blocked_word in post['blog_name']:
+                return False
 
         # if text of post contains any text in the blacklist, ignore it
         if len(set(post['summary'].lower().split()) & settings.BLACKLIST):
@@ -156,9 +151,7 @@ class TransGirls(object):
 
 
     def attempt_post(self):
-        """
-        Fetches posts from tumblr, determines if they're worthy, posts 'em
-        """
+        """Fetches posts from tumblr, determines if they're worthy, posts 'em"""
         # interate over potential posts
         for post in self.fetch_posts():
 
@@ -170,9 +163,7 @@ class TransGirls(object):
 
 
 def main():
-    """
-    Attempts to post to blog
-    """
+    """Attempts to post to blog"""
     TransGirls().attempt_post()
 
 
