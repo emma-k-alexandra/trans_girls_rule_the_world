@@ -20,6 +20,8 @@ class TransGirls(object):
         self.__tumblr = pytumblr.TumblrRestClient(*settings.TUMBLR)
         self.__emojis = settings.SAFE_EMOJIS
 
+        self.posts = []
+
 
     def __random_emoji(self):
         """
@@ -47,7 +49,7 @@ class TransGirls(object):
         return emoji.emojize(emoji_string, use_aliases=True)
 
 
-    def __in_database(self, post_id):
+    def __in_database(self, post_ids):
         """Checks if a post is in the database
 
         Args:
@@ -56,7 +58,7 @@ class TransGirls(object):
         Returns:
             bool: If the given post in the database
         """
-        return bool(self.__mongo.tumblr.trans_girl.find_one({'_id': post_id}))
+        return bool(self.__mongo.tumblr.trans_girl.count({'_id': {'$in': post_ids}}))
 
 
     def __save_post(self, post_id):
@@ -65,7 +67,7 @@ class TransGirls(object):
         Args:
             post_id (int): id of a tumblr post
         """
-        self.__mongo.tumblr.trans_girl.insert({'_id': post_id})
+        self.__mongo.tumblr.trans_girl.insert_one({'_id': post_id})
 
 
     def fetch_posts(self):
@@ -85,6 +87,18 @@ class TransGirls(object):
         return posts
 
 
+    def __all_posts_by_user(self, user):
+        """Post IDs of all recent posts by given user
+
+        Args:
+            user (str): username to find other posts for
+
+        Returns:
+            list: Post IDs of all recent posts by given user
+        """
+        return [post['id'] for post in self.posts if post['username'] == user]
+
+
     def should_reblog_post(self, post):
         """Determines if a post should be reblogged
 
@@ -98,18 +112,19 @@ class TransGirls(object):
         if post['type'] != 'photo':
             return False
 
-        # if we've already reblogged this post, ignore it
-        if self.__in_database(post['id']):
+        # if we've already reblogged this post
+        # or any other recent posts by the same user, ignore this post
+        if self.__in_database(self.__all_posts_by_user(post['blog_name'])):
             return False
 
-        case_insenstive_tags = set([tag.lower() for tag in post['tags']])
+        case_insenstive_tags = set(tag.lower() for tag in post['tags'])
 
         # if posts contains any tags in the blacklist, ignore it
         if len(case_insenstive_tags & settings.BLACKLIST):
             return False
 
         for blocked_word in settings.BLACKLIST:
-            
+
             # if username contains any text in the blacklist, ignore it
             if blocked_word in post['blog_name']:
                 return False
@@ -152,9 +167,10 @@ class TransGirls(object):
 
     def attempt_post(self):
         """Fetches posts from tumblr, determines if they're worthy, posts 'em"""
-        # interate over potential posts
-        for post in self.fetch_posts():
+        self.posts = self.fetch_posts()
 
+        # interate over potential posts
+        for post in self.posts:
             if self.should_reblog_post(post):
                 self.reblog_post(post)
 
