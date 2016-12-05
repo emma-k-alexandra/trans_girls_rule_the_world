@@ -96,7 +96,7 @@ class TransGirls(object):
         Returns:
             list: Post IDs of all recent posts by given user
         """
-        return [post['id'] for post in self.posts if post['username'] == user]
+        return [post['id'] for post in self.posts if post['blog_name'] == user]
 
 
     def should_reblog_post(self, post):
