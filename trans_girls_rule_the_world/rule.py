@@ -58,7 +58,7 @@ class TransGirls(object):
         Returns:
             bool: If the given post in the database
         """
-        return bool(self.__mongo.tumblr.trans_girl.count({'_id': {'$in': post_ids}}))
+        return self.__mongo.tumblr.trans_girl.count({'_id': {'$in': post_ids}})
 
 
     def __save_post(self, post_id):
@@ -108,13 +108,8 @@ class TransGirls(object):
         Returns:
             bool: if the given post should be reblogged
         """
-        # if posts is not a photo, give up
+        # if posts is not a photo, ignore this post
         if post['type'] != 'photo':
-            return False
-
-        # if we've already reblogged this post
-        # or any other recent posts by the same user, ignore this post
-        if self.__in_database(self.__all_posts_by_user(post['blog_name'])):
             return False
 
         case_insenstive_tags = set(tag.lower() for tag in post['tags'])
@@ -133,6 +128,14 @@ class TransGirls(object):
         if len(set(post['summary'].lower().split()) & settings.BLACKLIST):
             return False
 
+        # if we've already reblogged this post, ignore this post
+        if self.__in_database(post['id']):
+            return False
+
+        # if we've reblogged 2 other recent posts by the same user, ignore this post
+        if self.__in_database(self.__all_posts_by_user(post['blog_name'])) > 1:
+            return False
+        
         # if we meet our critia to reblog, we should reblog!
         return True
 
