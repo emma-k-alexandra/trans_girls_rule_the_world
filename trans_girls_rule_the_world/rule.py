@@ -129,7 +129,7 @@ class TransGirls(object):
             return False
 
         # if we've already reblogged this post, ignore this post
-        if self.__in_database(post['id']):
+        if self.__in_database([post['id']]):
             return False
 
         # if we've reblogged 2 other recent posts by the same user, ignore this post
