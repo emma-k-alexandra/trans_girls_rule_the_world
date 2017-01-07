@@ -81,8 +81,11 @@ class TransGirls(object):
         for tag in settings.TAGS:
             posts += self.__tumblr.tagged(tag)
 
-        # randomize posts from all the tags for funsies
-        random.shuffle(posts)
+        # sort posts reverse chronologically
+        posts.sort(
+            key=lambda x: x['timestamp'],
+            reverse=True
+        )
 
         return posts
 

@@ -11,10 +11,11 @@ TUMBLR = [
 ]
 
 TAGS = [
-    'trans girl',
+    'transisbeautiful',
     'trans woman',
     'twoc',
-    'girlslikeus'
+    'girlslikeus',
+    'transgirlsruletheworld'
 ]
 
 BLACKLIST = set([
@@ -102,7 +103,25 @@ BLACKLIST = set([
     "play thing",
     "mindless",
     "masturbate",
-    "masturbating"
+    "masturbating",
+    "ts",
+    "gay man",
+    "gay men",
+    "gay boy",
+    "gay boys",
+    "porn",
+    "trannywomen",
+    "dickgirl",
+    "femboi",
+    "crossdressing",
+    "sexual",
+    "naked",
+    "toptrans",
+    "trans positivity",
+    "transexuals",
+    "xdresser",
+    "boyswillbegirls",
+    "transsexual"
 ])
 
 SAFE_EMOJIS = [
