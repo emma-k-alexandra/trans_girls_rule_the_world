@@ -30,10 +30,7 @@ class TransGirls(object):
             list - tumblr post dicts
         """
         return sorted(
-            self.__tumblr.posts(
-                trans_girls_rule_the_world.settings.BLOG_URL,
-                limit=20 * len(trans_girls_rule_the_world.settings.TAGS)
-            )['posts'],
+            self.__tumblr.posts(trans_girls_rule_the_world.settings.BLOG_URL)['posts'],
             key=lambda p: p['timestamp'],
             reverse=True
         )
@@ -98,9 +95,9 @@ class TransGirls(object):
             bool - if this post has already been reblogged
         """
         # don't reblog posts older than a day
-        one_day_ago = datetime.datetime.utcnow() - datetime.timedelta(days=1)
-        one_day_ago_in_seconds = (datetime.datetime.utcnow() - one_day_ago).total_seconds()
-        if post['timestamp'] < one_day_ago_in_seconds:
+        one_hour_ago = datetime.datetime.utcnow() - datetime.timedelta(hours=1)
+        one_hour_ago_in_seconds = (datetime.datetime.utcnow() - one_hour_ago).total_seconds()
+        if post['timestamp'] < one_hour_ago_in_seconds:
             return True
 
         # canonical url for the first photo in this post
