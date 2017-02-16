@@ -1,34 +1,41 @@
-"""
-Tumblr bot to reblog trans girl's selfies
-"""
+"""Tumblr bot to reblog trans girl's selfies"""
 import sys
+import random
+import datetime
+
+import emoji
+import pytumblr
+
+import trans_girls_rule_the_world.settings
+
 reload(sys)
 sys.setdefaultencoding('utf-8')
-
-import random
-import emoji
-import pymongo
-import pytumblr
-from trans_girls_rule_the_world import settings
 
 class TransGirls(object):
     """Tumblr bot to reblog selfies"""
 
     def __init__(self):
         """Initialize tumblr and mongo client"""
-        self.__mongo = pymongo.MongoClient()
-        self.__tumblr = pytumblr.TumblrRestClient(*settings.TUMBLR)
-        self.__emojis = settings.SAFE_EMOJIS
+        self.__tumblr = pytumblr.TumblrRestClient(*trans_girls_rule_the_world.settings.TUMBLR)
+        self.__emojis = trans_girls_rule_the_world.settings.SAFE_EMOJIS
+        self.__reblogged_posts = self.__get_reblogged_posts()
 
         self.posts = []
 
 
-    def __random_emoji(self):
+    def __get_reblogged_posts(self):
+        """Fetches previously reblogged posts from tumblr api
+
+        Returns:
+            list - tumblr post dicts
         """
-        Determines a random emoji index from the safe emoji list
-        """
-        return int(
-            random.random() * len(self.__emojis)
+        return sorted(
+            self.__tumblr.posts(
+                trans_girls_rule_the_world.settings.BLOG_URL,
+                limit=20 * len(trans_girls_rule_the_world.settings.TAGS)
+            )['posts'],
+            key=lambda p: p['timestamp'],
+            reverse=True
         )
 
 
@@ -43,31 +50,10 @@ class TransGirls(object):
         """
         emoji_string = ''
 
-        for _ in xrange(0, int(random.random() * length + 1)):
-            emoji_string += self.__emojis[self.__random_emoji()]
+        for _ in xrange(0, random.randint(0, length + 1)):
+            emoji_string += self.__emojis[random.randint(0, len(self.__emojis) - 1)]
 
         return emoji.emojize(emoji_string, use_aliases=True)
-
-
-    def __in_database(self, post_ids):
-        """Checks if a post is in the database
-
-        Args:
-            post_id (int): id of a tumblr post
-
-        Returns:
-            bool: If the given post in the database
-        """
-        return self.__mongo.tumblr.trans_girl.count({'_id': {'$in': post_ids}})
-
-
-    def __save_post(self, post_id):
-        """Saves a post id to the database
-
-        Args:
-            post_id (int): id of a tumblr post
-        """
-        self.__mongo.tumblr.trans_girl.insert_one({'_id': post_id})
 
 
     def fetch_posts(self):
@@ -78,12 +64,12 @@ class TransGirls(object):
         """
         posts = []
 
-        for tag in settings.TAGS:
+        for tag in trans_girls_rule_the_world.settings.TAGS:
             posts += self.__tumblr.tagged(tag)
 
         # sort posts reverse chronologically
         posts.sort(
-            key=lambda x: x['timestamp'],
+            key=lambda p: p['timestamp'],
             reverse=True
         )
 
@@ -102,6 +88,52 @@ class TransGirls(object):
         return [post['id'] for post in self.posts if post['blog_name'] == user]
 
 
+    def already_reblogged(self, post):
+        """Determines if a post has already been reblogged recently
+
+        Args:
+            post (dict): a tumblr post
+
+        Returns:
+            bool - if this post has already been reblogged
+        """
+        # don't reblog posts older than a day
+        one_day_ago = datetime.datetime.utcnow() - datetime.timedelta(days=1)
+        one_day_ago_in_seconds = (datetime.datetime.utcnow() - one_day_ago).total_seconds()
+        if post['timestamp'] < one_day_ago_in_seconds:
+            return True
+
+        # canonical url for the first photo in this post
+        original_photo = post['photos'][0]['original_size']['url']
+
+        # canonical url for first photo of all posts we've already reblogged
+        reblogged_posts_photo = [
+            reblogged_post['photos'][0]['original_size']['url'] \
+            for reblogged_post in self.__reblogged_posts
+        ]
+
+        # if post is in list of posts that we've already reblogged, we already reblogged it
+        return original_photo in reblogged_posts_photo
+
+
+    def user_posting_a_lot(self, post):
+        """Determines if the author of the given post is posting a lot
+
+        Args:
+            post (dict): a tumblr post
+
+        Returns:
+            bool - if the author of this post is posting a lot
+        """
+        # if we've already reblogged 2 of someone's posts recently
+        # that user is posting a lot
+        return len([
+            True \
+            for reblogged_post in self.__reblogged_posts \
+            if post['blog_name'] == reblogged_post['post_author']
+        ]) > 2
+
+
     def should_reblog_post(self, post):
         """Determines if a post should be reblogged
 
@@ -115,30 +147,37 @@ class TransGirls(object):
         if post['type'] != 'photo':
             return False
 
-        case_insenstive_tags = set(tag.lower() for tag in post['tags'])
-
-        # if posts contains any tags in the blacklist, ignore it
-        if len(case_insenstive_tags & settings.BLACKLIST):
-            return False
-
-        for blocked_word in settings.BLACKLIST:
+        for blocked_word in trans_girls_rule_the_world.settings.BLACKLIST:
 
             # if username contains any text in the blacklist, ignore it
             if blocked_word in post['blog_name']:
                 return False
 
+        case_insenstive_tags = set(tag.lower() for tag in post['tags'])
+
+        # if posts contains any tags in the blacklist, ignore it
+        tags_are_naughty = len(
+            case_insenstive_tags & trans_girls_rule_the_world.settings.BLACKLIST
+        )
+
         # if text of post contains any text in the blacklist, ignore it
-        if len(set(post['summary'].lower().split()) & settings.BLACKLIST):
-            return False
+        text_in_blacklist = len(
+            set(post['summary'].lower().split()) & trans_girls_rule_the_world.settings.BLACKLIST
+        )
+
 
         # if we've already reblogged this post, ignore this post
-        if self.__in_database([post['id']]):
+        # if the author of this post is posting a lot, ignore them
+        should_ignore_post = any((
+            tags_are_naughty,
+            text_in_blacklist,
+            self.already_reblogged(post),
+            self.user_posting_a_lot(post)
+        ))
+
+        if should_ignore_post:
             return False
 
-        # if we've reblogged 2 other recent posts by the same user, ignore this post
-        if self.__in_database(self.__all_posts_by_user(post['blog_name'])) > 1:
-            return False
-        
         # if we meet our critia to reblog, we should reblog!
         return True
 
@@ -160,22 +199,19 @@ class TransGirls(object):
 
         # generate some emoji tags
         post_args['tags'] = [
-            self.generate_emoji_string(5),
-            self.generate_emoji_string(5)
+            self.generate_emoji_string(length=5),
+            self.generate_emoji_string(length=5)
         ]
 
         # reblog
-        self.__tumblr.reblog('transgirlsruletheworld.tumblr.com', **post_args)
-
-        # record that we reblogged this post
-        self.__save_post(post['id'])
+        self.__tumblr.reblog(trans_girls_rule_the_world.settings.BLOG_URL, **post_args)
 
 
     def attempt_post(self):
         """Fetches posts from tumblr, determines if they're worthy, posts 'em"""
         self.posts = self.fetch_posts()
 
-        # interate over potential posts
+        # iterate over potential posts
         for post in self.posts:
             if self.should_reblog_post(post):
                 self.reblog_post(post)

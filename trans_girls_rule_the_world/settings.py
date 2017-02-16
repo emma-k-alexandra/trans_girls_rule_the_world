@@ -2,6 +2,7 @@
 Settings for trans girls rule the world
 """
 import os
+BLOG_URL = 'transgirlsruletheworld.tumblr.com'
 
 TUMBLR = [
     os.environ['TRANS_GIRLS_CONSUMER_KEY'],

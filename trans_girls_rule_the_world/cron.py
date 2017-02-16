@@ -1,14 +1,10 @@
-"""
-Cronjob for trans girls bot
-"""
+"""Cronjob for trans girls bot"""
 import os
 import plan
 import trans_girls_rule_the_world
 
 def trans_girls_cron():
-    """
-    Config for trans girls cron
-    """
+    """Config for trans girls cron"""
     cron = plan.Plan('trans_girls_rule_the_world')
     path = trans_girls_rule_the_world.__path__[0]
     environment = {
