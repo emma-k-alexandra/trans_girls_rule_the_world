@@ -109,7 +109,8 @@ class TransGirls(object):
         # canonical url for first photo of all posts we've already reblogged
         reblogged_posts_photo = [
             reblogged_post['photos'][0]['original_size']['url'] \
-            for reblogged_post in self.__reblogged_posts
+            for reblogged_post in self.__reblogged_posts if 
+            reblogged_post.get('photos')
         ]
 
         # if post is in list of posts that we've already reblogged, we already reblogged it

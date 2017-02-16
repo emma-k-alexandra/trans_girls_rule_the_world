@@ -5,7 +5,7 @@ import setuptools
 
 setuptools.setup(
     name='trans_girls_rule_the_world',
-    version='3.0.0',
+    version='3.0.1',
     description='A tumblr bot to reblog trans girl\'s selfies',
     url='https://github.com/Deafjams/trans_girls_rule_the_world',
     author='Emma Foster',
