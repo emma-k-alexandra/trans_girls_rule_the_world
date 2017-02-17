@@ -1,7 +1,7 @@
 """Tumblr bot to reblog trans girl's selfies"""
 import sys
+import time
 import random
-import datetime
 
 import emoji
 import pytumblr
@@ -94,9 +94,7 @@ class TransGirls(object):
         Returns:
             bool - if this post has already been reblogged
         """
-        # don't reblog posts older than a day
-        one_hour_ago = datetime.datetime.utcnow() - datetime.timedelta(hours=1)
-        one_hour_ago_in_seconds = (datetime.datetime.utcnow() - one_hour_ago).total_seconds()
+        one_hour_ago_in_seconds = time.time() - 3600 # seconds in an hour
         if post['timestamp'] < one_hour_ago_in_seconds:
             return True
 
@@ -105,8 +103,8 @@ class TransGirls(object):
 
         # canonical url for first photo of all posts we've already reblogged
         reblogged_posts_photo = [
-            reblogged_post['photos'][0]['original_size']['url'] \
-            for reblogged_post in self.__reblogged_posts if 
+            reblogged_post['photos'][0]['original_size']['url']
+            for reblogged_post in self.__reblogged_posts if
             reblogged_post.get('photos')
         ]
 
