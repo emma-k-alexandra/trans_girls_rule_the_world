@@ -15,7 +15,6 @@ class TransGirls(object):
     """Tumblr bot to reblog selfies"""
 
     def __init__(self):
-        """Initialize tumblr and mongo client"""
         self.__tumblr = pytumblr.TumblrRestClient(*trans_girls_rule_the_world.settings.TUMBLR)
         self.__emojis = trans_girls_rule_the_world.settings.SAFE_EMOJIS
         self.__reblogged_posts = self.__get_reblogged_posts()
