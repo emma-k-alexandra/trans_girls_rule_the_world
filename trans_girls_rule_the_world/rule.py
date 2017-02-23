@@ -29,7 +29,10 @@ class TransGirls(object):
             list - tumblr post dicts
         """
         return sorted(
-            self.__tumblr.posts(trans_girls_rule_the_world.settings.BLOG_URL)['posts'],
+            self.__tumblr.posts(
+                trans_girls_rule_the_world.settings.BLOG_URL,
+                limit=100
+            )['posts'],
             key=lambda p: p['timestamp'],
             reverse=True
         )
