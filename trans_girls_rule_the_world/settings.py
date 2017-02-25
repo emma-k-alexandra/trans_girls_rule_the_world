@@ -70,6 +70,7 @@ BLACKLIST = set([
     "lewd",
     "masturbate",
     "masturbating",
+    "menlikeus",
     "mindless",
     "naked",
     "no reblog",
