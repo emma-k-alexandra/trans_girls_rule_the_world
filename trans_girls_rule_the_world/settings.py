@@ -12,7 +12,6 @@ TUMBLR = [
 ]
 
 TAGS = [
-    'transisbeautiful',
     'trans woman',
     'twoc',
     'girlslikeus',
