@@ -61,3 +61,4 @@ target/
 .DS_Store
 
 trans_girls_rule_the_world/keys.sh
+.python-version
