@@ -86,6 +86,22 @@ class TransGirls(object):
         """
         return [post['id'] for post in self.posts if post['blog_name'] == user]
 
+    
+    def post_id(self, post):
+        """Determines the root post id of the given post
+
+        Args:
+            post (dict): A tumblr post
+
+        Returns:
+            int - The given post's root id
+        """
+        if not post['trail']:
+            return post['id']
+
+        post_id_list = [trail['post']['id'] for trail in post['trail'] if trail['is_root_item']]
+        return int(post_id_list[0])
+
 
     def already_reblogged(self, post):
         """Determines if a post has already been reblogged recently
@@ -96,22 +112,15 @@ class TransGirls(object):
         Returns:
             bool - if this post has already been reblogged
         """
+        # If this post is older than an hour, ignore it
         one_hour_ago_in_seconds = time.time() - 3600 # seconds in an hour
         if post['timestamp'] < one_hour_ago_in_seconds:
             return True
+        
+        current_id = self.post_id(post)
+        reblogged_ids = [self.post_id(reblogged_post) for reblogged_post in self.__reblogged_posts]
 
-        # canonical url for the first photo in this post
-        original_photo = post['photos'][0]['original_size']['url']
-
-        # canonical url for first photo of all posts we've already reblogged
-        reblogged_posts_photo = [
-            reblogged_post['photos'][0]['original_size']['url']
-            for reblogged_post in self.__reblogged_posts if
-            reblogged_post.get('photos')
-        ]
-
-        # if post is in list of posts that we've already reblogged, we already reblogged it
-        return original_photo in reblogged_posts_photo
+        return current_id in reblogged_ids
 
 
     def user_posting_a_lot(self, post):
@@ -142,6 +151,14 @@ class TransGirls(object):
             bool: if the given post should be reblogged
         """
         # if posts is not a photo, ignore this post
+        if self.already_reblogged(post):
+            return False
+
+        case_insenstive_tags = set(tag.lower() for tag in post['tags'])
+
+        if trans_girls_rule_the_world.settings.AUTO_POST_TAG in case_insenstive_tags:
+            return True
+
         if post['type'] != 'photo':
             return False
 
@@ -150,8 +167,6 @@ class TransGirls(object):
             # if username contains any text in the blacklist, ignore it
             if blocked_word in post['blog_name']:
                 return False
-
-        case_insenstive_tags = set(tag.lower() for tag in post['tags'])
 
         # if posts contains any tags in the blacklist, ignore it
         tags_are_naughty = len(
@@ -169,7 +184,6 @@ class TransGirls(object):
         should_ignore_post = any((
             tags_are_naughty,
             text_in_blacklist,
-            self.already_reblogged(post),
             self.user_posting_a_lot(post)
         ))
 
