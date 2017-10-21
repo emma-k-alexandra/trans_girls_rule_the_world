@@ -68,7 +68,7 @@ class TransGirls(object):
 
         # sort posts reverse chronologically
         posts.sort(
-            key=lambda p: ('transgirlsruletheworld' in p['tags'], p['timestamp'],),
+            key=lambda p: p['timestamp'],
             reverse=True
         )
 
@@ -99,7 +99,7 @@ class TransGirls(object):
         if not post['trail']:
             return post['id']
 
-        post_id_list = [trail['post']['id'] for trail in post['trail'] if trail.get('is_root_item')]
+        post_id_list = [trail['post']['id'] for trail in post['trail'] if trail['is_root_item']]
         return int(post_id_list[0])
 
 
