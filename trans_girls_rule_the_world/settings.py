@@ -18,8 +18,6 @@ TAGS = [
     'transgirlsruletheworld'
 ]
 
-AUTO_POST_TAG = 'transgirlsruletheworld'
-
 BLACKLIST = set([
     "ass",
     "blood",

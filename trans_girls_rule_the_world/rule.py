@@ -156,9 +156,6 @@ class TransGirls(object):
 
         case_insenstive_tags = set(tag.lower() for tag in post['tags'])
 
-        if trans_girls_rule_the_world.settings.AUTO_POST_TAG in case_insenstive_tags:
-            return True
-
         if post['type'] != 'photo':
             return False
 
