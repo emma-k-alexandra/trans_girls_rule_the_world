@@ -99,7 +99,7 @@ class TransGirls(object):
         if not post['trail']:
             return post['id']
 
-        post_id_list = [trail['post']['id'] for trail in post['trail'] if trail['is_root_item']]
+        post_id_list = [trail['post']['id'] for trail in post['trail'] if trail.get('is_root_item')]
         return int(post_id_list[0])
 
 
@@ -137,7 +137,7 @@ class TransGirls(object):
         return len([
             True \
             for reblogged_post in self.__reblogged_posts \
-            if post['blog_name'] == reblogged_post['post_author']
+            if post['blog_name'] == reblogged_post['blog_name']
         ]) > 2
 
 
