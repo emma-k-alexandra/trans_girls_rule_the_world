@@ -97,7 +97,7 @@ class TransGirls(object):
             int - The given post's root id
         """
         if not post['trail']:
-            return post['id']
+            return post['photos'][0]['original_size']['url']
 
         post_id_list = [trail['post']['id'] for trail in post['trail'] if trail.get('is_root_item')]
         return int(post_id_list[0])
