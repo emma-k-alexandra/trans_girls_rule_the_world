@@ -14,8 +14,8 @@ def trans_girls_cron():
         'TRANS_GIRLS_OAUTH_SECRET': os.environ['TRANS_GIRLS_OAUTH_SECRET']
     }
 
-    cron.script(
-        'rule.py',
+    cron.command(
+        'curl http://localhost:5000/post_selfie',
         every='5.minutes',
         path=path,
         environment=environment

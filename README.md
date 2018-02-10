@@ -6,7 +6,7 @@ A tumblr bot to reblog trans girl's selfies
 ```bash
 git clone https://github.com/Deafjams/trans_girls_rule_the_world.git
 cd trans_girls_rule_the_world
-python setup.py
+python setup.py install
 ```
 
 ## Configure
@@ -18,12 +18,8 @@ export TRANS_GIRLS_OAUTH_SECRET={{Your tumblr oauth secret}}
 ```
 
 ## Run
-### Once
 ```bash
-python rule.py
-```
-
-### Regularly via crontab
-```bash
+nohup python server.py &
 python cron.py
 ```
+Note: This is incredibly fragile and will be strengthened in future releases
