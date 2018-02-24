@@ -1,6 +1,4 @@
-"""
-Simple server for queueing selfies to reblog
-"""
+"""Simple server for queueing selfies to reblog"""
 import collections
 
 import flask
@@ -13,9 +11,7 @@ POST_QUEUE = collections.deque()
 
 @APP.route('/post_selfie')
 def post_selfie():
-    """
-    Endpoint to queue and reblog selfies
-    """
+    """Endpoint to queue and reblog selfies"""
     # fetch posts
     post_determiner = trans_girls_rule_the_world.rule.TransGirls()
     posts = post_determiner.fetch_posts()
