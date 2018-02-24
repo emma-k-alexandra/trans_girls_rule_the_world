@@ -6,7 +6,6 @@ import trans_girls_rule_the_world
 def trans_girls_cron():
     """Config for trans girls cron"""
     cron = plan.Plan('trans_girls_rule_the_world')
-    path = trans_girls_rule_the_world.__path__[0]
     environment = {
         'TRANS_GIRLS_CONSUMER_KEY': os.environ['TRANS_GIRLS_CONSUMER_KEY'],
         'TRANS_GIRLS_CONSUMER_SECRET': os.environ['TRANS_GIRLS_CONSUMER_SECRET'],
@@ -17,7 +16,6 @@ def trans_girls_cron():
     cron.command(
         'curl http://localhost:5000/post_selfie',
         every='5.minutes',
-        path=path,
         environment=environment
     )
 

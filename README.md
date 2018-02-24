@@ -19,7 +19,7 @@ export TRANS_GIRLS_OAUTH_SECRET={{Your tumblr oauth secret}}
 
 ## Run
 ```bash
-nohup python server.py &
-python cron.py
+nohup python3 server.py &
+python3 cron.py
 ```
 Note: This is incredibly fragile and will be strengthened in future releases

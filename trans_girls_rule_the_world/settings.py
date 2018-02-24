@@ -18,7 +18,7 @@ TAGS = [
     'transgirlsruletheworld'
 ]
 
-BLACKLIST = set([
+BLACKLIST = {
     "ass",
     "anti gender",
     "blood",
@@ -157,7 +157,7 @@ BLACKLIST = set([
     "webcomic",
     "wombyn born wombyn",
     "xdresser"
-])
+}
 
 SAFE_EMOJIS = [
     ':innocent:',

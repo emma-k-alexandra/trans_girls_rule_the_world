@@ -8,9 +8,6 @@ import pytumblr
 
 import trans_girls_rule_the_world.settings
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
-
 class TransGirls(object):
     """Tumblr bot to reblog selfies"""
 
@@ -49,7 +46,7 @@ class TransGirls(object):
         """
         emoji_string = ''
 
-        for _ in xrange(0, random.randint(0, length + 1)):
+        for _ in range(0, random.randint(0, length + 1)):
             emoji_string += self.__emojis[random.randint(0, len(self.__emojis) - 1)]
 
         return emoji.emojize(emoji_string, use_aliases=True)

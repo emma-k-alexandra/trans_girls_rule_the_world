@@ -11,8 +11,8 @@ setuptools.setup(
     author='Emma Foster',
     license='Public Domain',
     install_requires=[
-        'pytumblr>=0.0.6,<0.1.0',
-        'emoji>=0.3,<1.0',
+        'pytumblr>=0.0.7,<0.1.0',
+        'emoji>=0.4.5,<1.0',
         'plan>=0.5,<1.0',
         'flask>=0.12.2,<1.0'
     ],
@@ -24,6 +24,6 @@ setuptools.setup(
         "Development Status :: 5 - Production",
         "License :: Public Domain",
         "Natural Language :: English",
-        "Programming Language :: Python :: 2.7"
+        "Programming Language :: Python :: 3.6"
     )
 )
