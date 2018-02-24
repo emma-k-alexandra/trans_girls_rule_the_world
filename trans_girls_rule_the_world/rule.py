@@ -1,14 +1,13 @@
 """Tumblr bot to reblog trans girl's selfies"""
-import sys
 import time
 import random
 
-import emoji
 import pytumblr
+import emoji
 
 import trans_girls_rule_the_world.settings
 
-class TransGirls(object):
+class TransGirls:
     """Tumblr bot to reblog selfies"""
 
     def __init__(self):
