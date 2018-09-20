@@ -1,5 +1,6 @@
 """Tumblr bot to reblog trans girl's selfies"""
 import sys
+import json
 import time
 import random
 
@@ -138,6 +139,15 @@ class TransGirls(object):
         ]) > 2
 
 
+    def save_post(self, post, positive):
+        filename = '{}/{}.json'.format(
+            'positive' if positive else 'negative', 
+            self.post_id(post)
+        ) 
+        with open(filename, 'w') as json_file:
+            json.dump(post, json_file)
+
+
     def should_reblog_post(self, post):
         """Determines if a post should be reblogged
 
@@ -182,9 +192,11 @@ class TransGirls(object):
         ))
 
         if should_ignore_post:
+            self.save_post(post, positive=False)
             return False
 
         # if we meet our critia to reblog, we should reblog!
+        self.save_post(post, positive=False)
         return True
 
 
