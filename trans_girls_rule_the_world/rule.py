@@ -7,7 +7,8 @@ import random
 import emoji
 import pytumblr
 
-import trans_girls_rule_the_world.scrape
+import scrape_tumblr
+
 import trans_girls_rule_the_world.settings
 
 class TransGirls(object):
@@ -63,7 +64,7 @@ class TransGirls(object):
         posts = []
 
         for tag in trans_girls_rule_the_world.settings.TAGS:
-            posts += trans_girls_rule_the_world.scrape.scrape(tag)
+            posts += scrape_tumblr.scrape(tag)
 
         # sort posts reverse chronologically
         posts.sort(
