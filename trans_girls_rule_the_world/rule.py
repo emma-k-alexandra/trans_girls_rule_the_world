@@ -144,7 +144,8 @@ class TransGirls(object):
             'positive' if positive else 'negative', 
             self.post_id(post)
         ) 
-        with open(filename, 'w') as json_file:
+        with open(filename, 'w+') as json_file:
+            print('saving {}'.format(filename))
             json.dump(post, json_file)
 
 
@@ -196,7 +197,7 @@ class TransGirls(object):
             return False
 
         # if we meet our critia to reblog, we should reblog!
-        self.save_post(post, positive=False)
+        self.save_post(post, positive=True)
         return True
 
 
