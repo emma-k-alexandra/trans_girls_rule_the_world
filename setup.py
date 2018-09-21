@@ -5,7 +5,7 @@ import setuptools
 
 setuptools.setup(
     name='trans_girls_rule_the_world',
-    version='6.0.1',
+    version='6.0.0',
     description='A tumblr bot to reblog trans girl\'s selfies',
     url='https://github.com/Deafjams/trans_girls_rule_the_world',
     author='Emma Foster',
@@ -17,7 +17,7 @@ setuptools.setup(
         'flask>=0.12.2,<1.0'
     ],
     dependency_links=[
-        'https://github.com/Deafjams/scrape-tumblr/tarball/master#egg=scrape_tumblr-1.0.0'
+        'git@github.com:Deafjams/scrape-tumblr.git#egg=scrape_tumblr-1.0.0'
     ],
     package_dir={
         'trans_girls_rule_the_world': 'trans_girls_rule_the_world'
