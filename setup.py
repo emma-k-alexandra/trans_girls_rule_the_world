@@ -5,7 +5,7 @@ import setuptools
 
 setuptools.setup(
     name='trans_girls_rule_the_world',
-    version='6.0.0',
+    version='5.1.1',
     description='A tumblr bot to reblog trans girl\'s selfies',
     url='https://github.com/Deafjams/trans_girls_rule_the_world',
     author='Emma Foster',
@@ -14,9 +14,7 @@ setuptools.setup(
         'pytumblr>=0.0.7,<0.1.0',
         'emoji>=0.4.5,<1.0',
         'plan>=0.5,<1.0',
-        'flask>=0.12.2,<1.0',
-        'requests',
-        'beautifulsoup4'
+        'flask>=0.12.2,<1.0'
     ],
     package_dir={
         'trans_girls_rule_the_world': 'trans_girls_rule_the_world'
@@ -26,6 +24,6 @@ setuptools.setup(
         "Development Status :: 5 - Production",
         "License :: Public Domain",
         "Natural Language :: English",
-        "Programming Language :: Python :: 3.7"
+        "Programming Language :: Python :: 3.6"
     )
 )
