@@ -7,6 +7,7 @@ import random
 import emoji
 import pytumblr
 
+import trans_girls_rule_the_world.scrape
 import trans_girls_rule_the_world.settings
 
 class TransGirls(object):
@@ -62,13 +63,7 @@ class TransGirls(object):
         posts = []
 
         for tag in trans_girls_rule_the_world.settings.TAGS:
-            posts += self.__tumblr.tagged(tag)
-
-        # sort posts reverse chronologically
-        posts.sort(
-            key=lambda p: p['timestamp'],
-            reverse=True
-        )
+            posts += trans_girls_rule_the_world.scrape.scrape(tag)
 
         return posts
 
@@ -110,11 +105,6 @@ class TransGirls(object):
         Returns:
             bool - if this post has already been reblogged
         """
-        # If this post is older than an hour, ignore it
-        one_hour_ago_in_seconds = time.time() - 3600 # seconds in an hour
-        if post['timestamp'] < one_hour_ago_in_seconds:
-            return True
-        
         current_id = self.post_id(post)
         reblogged_ids = [self.post_id(reblogged_post) for reblogged_post in self.__reblogged_posts]
 
