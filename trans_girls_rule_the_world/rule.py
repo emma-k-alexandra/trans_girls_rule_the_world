@@ -164,7 +164,7 @@ class TransGirls(object):
 
         case_insenstive_tags = set(tag.lower() for tag in post['tags'])
 
-        if post['type'] != 'photo':
+        if post['type'] not in ['regular', 'photo']:
             return False
 
         for blocked_word in trans_girls_rule_the_world.settings.BLACKLIST:
