@@ -1,13 +1,16 @@
 """Tumblr bot to reblog trans girl's selfies"""
-import sys
-import json
 import time
 import random
 
-import emoji
+from sklearn.externals import joblib
+
 import pytumblr
+import emoji
 
 import trans_girls_rule_the_world.settings
+
+GOOD_POST = 0
+BAD_POST = 1
 
 class TransGirls(object):
     """Tumblr bot to reblog selfies"""
@@ -16,6 +19,8 @@ class TransGirls(object):
         self.__tumblr = pytumblr.TumblrRestClient(*trans_girls_rule_the_world.settings.TUMBLR)
         self.__emojis = trans_girls_rule_the_world.settings.SAFE_EMOJIS
         self.__reblogged_posts = self.__get_reblogged_posts()
+        self.__vectorizer = joblib.load('count_vectorizer.joblib')
+        self.__classifier = joblib.load('knn_post_classifier.joblib')
 
         self.posts = []
 
@@ -29,7 +34,7 @@ class TransGirls(object):
         return sorted(
             self.__tumblr.posts(
                 trans_girls_rule_the_world.settings.BLOG_URL,
-                limit=100
+                limit=20
             )['posts'],
             key=lambda p: p['timestamp'],
             reverse=True
@@ -84,7 +89,7 @@ class TransGirls(object):
         """
         return [post['id'] for post in self.posts if post['blog_name'] == user]
 
-    
+
     def post_id(self, post):
         """Determines the root post id of the given post
 
@@ -110,43 +115,15 @@ class TransGirls(object):
         Returns:
             bool - if this post has already been reblogged
         """
-        # If this post is older than an hour, ignore it
-        one_hour_ago_in_seconds = time.time() - 3600 # seconds in an hour
+        # If this post is older than 7 days, ignore it
+        one_hour_ago_in_seconds = time.time() - 604800 # seconds in an 7 days
         if post['timestamp'] < one_hour_ago_in_seconds:
             return True
-        
+
         current_id = self.post_id(post)
         reblogged_ids = [self.post_id(reblogged_post) for reblogged_post in self.__reblogged_posts]
 
         return current_id in reblogged_ids
-
-
-    def user_posting_a_lot(self, post):
-        """Determines if the author of the given post is posting a lot
-
-        Args:
-            post (dict): a tumblr post
-
-        Returns:
-            bool - if the author of this post is posting a lot
-        """
-        # if we've already reblogged 2 of someone's posts recently
-        # that user is posting a lot
-        return len([
-            True \
-            for reblogged_post in self.__reblogged_posts \
-            if post['blog_name'] == reblogged_post['blog_name']
-        ]) > 2
-
-
-    def save_post(self, post, positive):
-        filename = '{}/{}.json'.format(
-            'positive' if positive else 'negative', 
-            self.post_id(post)
-        ) 
-        with open(filename, 'w+') as json_file:
-            print('saving {}'.format(filename))
-            json.dump(post, json_file)
 
 
     def should_reblog_post(self, post):
@@ -162,43 +139,16 @@ class TransGirls(object):
         if self.already_reblogged(post):
             return False
 
-        case_insenstive_tags = set(tag.lower() for tag in post['tags'])
+        tags = ' '.join(post['tags'])
+        body = post['summary']
 
-        if post['type'] not in ['regular', 'photo']:
-            return False
+        text_of_post = ' '.join([tags, body])
 
-        for blocked_word in trans_girls_rule_the_world.settings.BLACKLIST:
+        vector_of_post = self.__vectorizer.transform([text_of_post])
 
-            # if username contains any text in the blacklist, ignore it
-            if blocked_word in post['blog_name']:
-                return False
+        predicton = self.__classifier.predict(vector_of_post)[0]
 
-        # if posts contains any tags in the blacklist, ignore it
-        tags_are_naughty = len(
-            case_insenstive_tags & trans_girls_rule_the_world.settings.BLACKLIST
-        )
-
-        # if text of post contains any text in the blacklist, ignore it
-        text_in_blacklist = len(
-            set(post['summary'].lower().split()) & trans_girls_rule_the_world.settings.BLACKLIST
-        )
-
-
-        # if we've already reblogged this post, ignore this post
-        # if the author of this post is posting a lot, ignore them
-        should_ignore_post = any((
-            tags_are_naughty,
-            text_in_blacklist,
-            self.user_posting_a_lot(post)
-        ))
-
-        if should_ignore_post:
-            self.save_post(post, positive=False)
-            return False
-
-        # if we meet our critia to reblog, we should reblog!
-        self.save_post(post, positive=True)
-        return True
+        return predicton == GOOD_POST
 
 
     def reblog_post(self, post):
