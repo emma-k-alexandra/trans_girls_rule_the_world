@@ -5,7 +5,7 @@ import collections
 
 import flask
 
-import trans_girls_rule_the_world.rule
+import rule
 
 APP = flask.Flask(__name__)
 
@@ -17,7 +17,7 @@ def post_selfie():
     Endpoint to queue and reblog selfies
     """
     # fetch posts
-    post_determiner = trans_girls_rule_the_world.rule.TransGirls()
+    post_determiner = rule.TransGirls()
     posts = post_determiner.fetch_posts()
 
     posts_to_reblog = []
