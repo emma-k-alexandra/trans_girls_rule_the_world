@@ -116,8 +116,8 @@ class TransGirls(object):
             bool - if this post has already been reblogged
         """
         # If this post is older than 7 days, ignore it
-        one_hour_ago_in_seconds = time.time() - 604800 # seconds in an 7 days
-        if post['timestamp'] < one_hour_ago_in_seconds:
+        one_day_ago_in_seconds = time.time() - 86400 # seconds in an 7 days
+        if post['timestamp'] < one_day_ago_in_seconds:
             return True
 
         current_id = self.post_id(post)

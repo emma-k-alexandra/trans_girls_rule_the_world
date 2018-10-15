@@ -15,7 +15,7 @@ def trans_girls_cron():
 
     cron.command(
         'curl http://localhost:5000/post_selfie',
-        every='5.minutes',
+        every='10.minutes',
         environment=environment
     )
 
