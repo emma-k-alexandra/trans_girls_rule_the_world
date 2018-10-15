@@ -7,7 +7,7 @@ from sklearn.externals import joblib
 import pytumblr
 import emoji
 
-import trans_girls_rule_the_world.settings
+import settings
 
 GOOD_POST = 0
 BAD_POST = 1
@@ -16,8 +16,8 @@ class TransGirls(object):
     """Tumblr bot to reblog selfies"""
 
     def __init__(self):
-        self.__tumblr = pytumblr.TumblrRestClient(*trans_girls_rule_the_world.settings.TUMBLR)
-        self.__emojis = trans_girls_rule_the_world.settings.SAFE_EMOJIS
+        self.__tumblr = pytumblr.TumblrRestClient(*settings.TUMBLR)
+        self.__emojis = settings.SAFE_EMOJIS
         self.__reblogged_posts = self.__get_reblogged_posts()
         self.__vectorizer = joblib.load('count_vectorizer.joblib')
         self.__classifier = joblib.load('knn_post_classifier.joblib')
@@ -33,7 +33,7 @@ class TransGirls(object):
         """
         return sorted(
             self.__tumblr.posts(
-                trans_girls_rule_the_world.settings.BLOG_URL,
+                settings.BLOG_URL,
                 limit=20
             )['posts'],
             key=lambda p: p['timestamp'],
@@ -66,7 +66,7 @@ class TransGirls(object):
         """
         posts = []
 
-        for tag in trans_girls_rule_the_world.settings.TAGS:
+        for tag in settings.TAGS:
             posts += self.__tumblr.tagged(tag)
 
         # sort posts reverse chronologically
@@ -173,7 +173,7 @@ class TransGirls(object):
         ]
 
         # reblog
-        self.__tumblr.reblog(trans_girls_rule_the_world.settings.BLOG_URL, **post_args)
+        self.__tumblr.reblog(settings.BLOG_URL, **post_args)
 
 
     def attempt_post(self):
