@@ -31,14 +31,18 @@ class TransGirls(object):
         Returns:
             list - tumblr post dicts
         """
-        return sorted(
-            self.__tumblr.posts(
+        offset = 0
+        posts = []
+        while offset < 100:
+            posts += self.__tumblr.posts(
                 settings.BLOG_URL,
-                limit=20
-            )['posts'],
-            key=lambda p: p['timestamp'],
-            reverse=True
-        )
+                offset=offset
+            )['posts']
+            offset += 20
+
+        posts.sort(key=lambda p: p['timestamp'], reverse=True)
+
+        return posts
 
 
     def generate_emoji_string(self, length):
@@ -115,8 +119,8 @@ class TransGirls(object):
         Returns:
             bool - if this post has already been reblogged
         """
-        # If this post is older than 7 days, ignore it
-        one_day_ago_in_seconds = time.time() - 86400 # seconds in an 7 days
+        # If this post is older than 1 day, ignore it
+        one_day_ago_in_seconds = time.time() - 86400 # seconds in a day
         if post['timestamp'] < one_day_ago_in_seconds:
             return True
 
