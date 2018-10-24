@@ -9,8 +9,8 @@ import emoji
 
 import settings
 
-GOOD_POST = 0
-BAD_POST = 1
+GOOD_POST = 1
+BAD_POST = 0
 
 class TransGirls(object):
     """Tumblr bot to reblog selfies"""
@@ -20,7 +20,7 @@ class TransGirls(object):
         self.__emojis = settings.SAFE_EMOJIS
         self.__reblogged_posts = self.__get_reblogged_posts()
         self.__vectorizer = joblib.load('count_vectorizer.joblib')
-        self.__classifier = joblib.load('knn_post_classifier.joblib')
+        self.__classifier = joblib.load('mlp_post_classifier.joblib')
 
         self.posts = []
 
